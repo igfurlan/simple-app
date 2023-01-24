@@ -1,0 +1,1 @@
+Studying the gitops functionality
