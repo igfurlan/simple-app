@@ -33,13 +33,11 @@ jobs:
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
           TARGET: ${{ secrets.REMOTE_TARGET }}
           SCRIPT_BEFORE: |
-            whoami
-            docker stop simple-app || docker ps
-            
+            docker stop simple-app || echo "Container was not running"  
           SCRIPT_AFTER: |
-            whoami
-            ls -al
             echo $RSYNC_STDOUT
             docker login -u ${{ secrets.DOCKER_USERNAME }} -p "${{ secrets.DOCKER_PASSWORD }}"
+            echo "Pulling image from dockerhub"
             docker pull ${{ secrets.DOCKER_USERNAME }}/simple-app:latest
-            docker start simple-app
+            echo "Starting application"
+            docker run $(docker images --filter=reference='igfurlan/simple-app:latest' --format "{{.ID}}" ) -p 8080:8080 --name simple-app
