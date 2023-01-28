@@ -34,7 +34,8 @@ jobs:
           TARGET: ${{ secrets.REMOTE_TARGET }}
           SCRIPT_BEFORE: |
             whoami
-            docker stop simple-app
+            { docker stop simple-app && } || { docker ps }
+            
           SCRIPT_AFTER: |
             whoami
             ls -al
