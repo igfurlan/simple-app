@@ -42,6 +42,4 @@ jobs:
 
       - name: Docker start application process
         run: | 
-          echo "$(docker images --filter=reference='igfurlan/simple-app:latest' --format "{{.ID}}")" >> $DOCKER_ID
-          echo $DOCKER_ID
-          docker run --name simple-app -p 8080:8080 $DOCKER_ID &
+          docker run --name simple-app -p 8080:8080 $(docker images --filter=reference='igfurlan/simple-app:latest' --format "{{.ID}}") &
