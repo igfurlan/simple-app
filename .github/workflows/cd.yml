@@ -42,4 +42,4 @@ jobs:
 
       - name: Docker start application process
         run: |
-          docker run $(docker images --filter=reference='igfurlan/simple-app:latest' --format "{{.ID}}") -p 8080:8080 --name simple-app
+          docker run -p 8080:8080 --name simple-app $(docker images --filter=reference='igfurlan/simple-app:latest' --format "{{.ID}}") &
