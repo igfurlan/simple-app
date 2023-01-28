@@ -33,13 +33,13 @@ jobs:
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
           TARGET: ${{ secrets.REMOTE_TARGET }}
           SCRIPT_BEFORE: |
-            echo "Cleaning up the currently container"
-            docker stop simple-app || echo "Container simple-app is not running"
-            docker rmi $(docker images --filter=reference='igfurlan/simple-app:latest' --format "{{.ID}}" ) || echo "Container image do not exists here"
+            whoami
+            docker stop simple-app || docker ps
             
           SCRIPT_AFTER: |
+            whoami
+            ls -al
             echo $RSYNC_STDOUT
-            echo "Starting new container version"
             docker login -u ${{ secrets.DOCKER_USERNAME }} -p "${{ secrets.DOCKER_PASSWORD }}"
             docker pull ${{ secrets.DOCKER_USERNAME }}/simple-app:latest
-            docker start $(docker images --filter=reference='igfurlan/simple-app:latest' --format "{{.ID}}" )
+            docker start simple-app
