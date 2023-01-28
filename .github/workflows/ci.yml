@@ -34,12 +34,12 @@ jobs:
           TARGET: ${{ secrets.REMOTE_TARGET }}
           SCRIPT_BEFORE: |
             whoami
-            docker login -u ${{ secrets.DOCKER_USERNAME }} -p "${{ secrets.DOCKER_PASSWORD }}"
             docker stop simple-app || docker ps
             
           SCRIPT_AFTER: |
             whoami
             ls -al
             echo $RSYNC_STDOUT
-            docker pull simple-app:latest
+            docker login -u ${{ secrets.DOCKER_USERNAME }} -p "${{ secrets.DOCKER_PASSWORD }}"
+            docker pull ${{ secrets.DOCKER_USERNAME }}/simple-app:latest
             docker start simple-app
