@@ -41,8 +41,7 @@ jobs:
           docker pull ${{ secrets.DOCKER_USERNAME }}/simple-app:latest
 
       - name: Docker start application process
-        env:
-          DOCKER_ID: $(docker images --filter=reference='igfurlan/simple-app:latest' --format "{{.ID}}")
         run: | 
+          echo "$(docker images --filter=reference='igfurlan/simple-app:latest' --format "{{.ID}}")" >> $DOCKER_ID
           echo $DOCKER_ID
-          docker run -p 8080:8080 --name simple-app $DOCKER_ID &
+          docker run --name simple-app -p 8080:8080 $DOCKER_ID &
