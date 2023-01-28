@@ -43,6 +43,5 @@ jobs:
       - name: Docker start application process
         env:
           DOCKER_ID: $(docker images --filter=reference='igfurlan/simple-app:latest' --format "{{.ID}}")
-        run: |
-          export 
+        run: | 
           docker run -p 8080:8080 --name simple-app $DOCKER_ID &
