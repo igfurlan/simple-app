@@ -12,6 +12,18 @@ jobs:
       - name: Checkout do repositorio
         uses: actions/checkout@v1
 
+  docker-login:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+  docker-run:
+    runs-on: ubuntu-latest
+    steps:
       - name: Build and push image to Dockerhub
         uses: docker/build-push-action@v1.1.0
         with:
@@ -20,26 +32,16 @@ jobs:
           repository: ${{ secrets.DOCKER_USERNAME }}/simple-app
           tags: ${{ github.sha }}, latest  
 
-      #- name: Deploy para meu host
-      #  uses: easingthemes/ssh-deploy@main
-      #  env:
-      #    SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
-      #    ARGS: "-rlgoDzvc -i --delete"
-      #    SOURCE: "./"
-      #    REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-      #    REMOTE_USER: ${{ secrets.REMOTE_USER }}
-      #    TARGET: ${{ secrets.REMOTE_TARGET }}
-         
-      
-      - name: Docker stopping process
-        run: |
-          docker stop simple-app || echo "Container was not running" 
-
-      - name: Docker pull process 
-        run: |
-          docker login -u ${{ secrets.DOCKER_USERNAME }} -p "${{ secrets.DOCKER_PASSWORD }}"
-          docker pull ${{ secrets.DOCKER_USERNAME }}/simple-app:latest
-
-      - name: Docker start application process
-        run: | 
-          docker run --name simple-app -p 8080:8080 $(docker images --filter=reference='igfurlan/simple-app:latest' --format "{{.ID}}") &
+      - name: Deploy para meu host
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+          ARGS: "-rlgoDzvc -i --delete"
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          SCRIPT_BEFORE: |
+            docker stop simple-app || echo "Container was not running"
+          SCRIPT_AFTER: |
+            docker pull ${{ secrets.DOCKER_USERNAME }}/simple-app:latest
+            docker run --name simple-app -p 8080:8080 $(docker images --filter=reference='igfurlan/simple-app:latest' --format "{{.ID}}") &
+            echo $RSYNC_STDOUT
