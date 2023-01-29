@@ -42,3 +42,4 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/simple-app:latest
             docker rmi $(docker images --filter "dangling=true" -q --no-trunc)
             docker run --name simple-app -p 8080:8080 $(docker images --filter=reference='igfurlan/simple-app:latest' --format "{{.ID}}") & disown
+            exit 0
