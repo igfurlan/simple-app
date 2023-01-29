@@ -41,4 +41,3 @@ jobs:
           SCRIPT_AFTER: |
             docker pull ${{ secrets.DOCKER_USERNAME }}/simple-app:latest
             docker run --name simple-app -p 8080:8080 $(docker images --filter=reference='igfurlan/simple-app:latest' --format "{{.ID}}") &
-            echo $RSYNC_STDOUT
