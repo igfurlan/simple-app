@@ -36,7 +36,7 @@ jobs:
           TARGET: ${{ secrets.REMOTE_TARGET }}
           EXCLUDE: "/.git/, /.github/"
           SCRIPT_BEFORE: |
-            docker stop simple-app || echo "Container was not running"
+            docker kill simple-app || echo "Container was not running"
             docker rm simple-app || echo "Container did not exists"
           SCRIPT_AFTER: |
             docker pull ${{ secrets.DOCKER_USERNAME }}/simple-app:latest
