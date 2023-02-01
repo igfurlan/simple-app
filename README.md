@@ -1,2 +1,3 @@
 Studying the gitops functionality
-CI/CD in progress 
+CD in progress 
+Using only docker
